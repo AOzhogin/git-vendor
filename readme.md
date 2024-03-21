@@ -10,7 +10,7 @@ By default `git-vendor` conforms to the pattern used for vendoring golang depend
 * Dependencies are stored under the fully qualified project path.
     * e.g. `https://github.com/a.ozhogin/example` will be stored under `git-vendor/github.com/a.ozhogin/example`.
 
-## All initial logic is taken from the project and reprogrammed in Go
+## All initial logic is taken from the project and reprogrammed in Go - with saving changes to file
 
   https://github.com/brettlangdon/git-vendor
 

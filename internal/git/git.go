@@ -24,20 +24,32 @@ func (g *Git) IsInstalled() bool {
 
 }
 
+func (g *Git) Status() error {
+
+	gitCmd := exec.Command("git", "status")
+	gitCmd.Stdout = os.Stdout
+	gitCmd.Stderr = os.Stderr
+	if err := gitCmd.Run(); err != nil {
+		return fmt.Errorf("git status: %w", err)
+	}
+
+	return nil
+}
+
 func (g *Git) Commit(message string) error {
 
 	gitCmd := exec.Command("git", "add", ".")
 	gitCmd.Stdout = os.Stdout
 	gitCmd.Stderr = os.Stderr
 	if err := gitCmd.Run(); err != nil {
-		return fmt.Errorf("git ci: %w", err)
+		return fmt.Errorf("git add: %w", err)
 	}
 
 	gitCmd = exec.Command("git", "commit", "--amend", "-m", message)
 	gitCmd.Stdout = os.Stdout
 	gitCmd.Stderr = os.Stderr
 	if err := gitCmd.Run(); err != nil {
-		return fmt.Errorf("git ci: %w", err)
+		return fmt.Errorf("git commit: %w", err)
 	}
 
 	return nil

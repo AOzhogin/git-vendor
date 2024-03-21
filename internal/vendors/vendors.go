@@ -19,6 +19,7 @@ type Storage interface {
 
 type Git interface {
 	IsInstalled() bool
+	Status() error
 	Add(workDir string, repository string, ref string, message string) error
 	Commit(message string) error
 	Update(workDir string, repository string, currRef string, message string, targetRef string) error
@@ -112,6 +113,10 @@ func (v *Vendors) UpStream(name string, repository string, ref string) error {
 
 func (v *Vendors) Update(name string, targetRef string) error {
 
+	if err := v.git.Status(); err != nil {
+		return err
+	}
+
 	if targetRef == "" {
 		targetRef = "master"
 	}
@@ -203,9 +208,12 @@ func (v *Vendors) getTargetDir(repository string) string {
 	case true:
 		return fmt.Sprintf("%s/%s", v.dir, strings.ReplaceAll(strings.TrimPrefix(strings.TrimSuffix(repository, ".git"), "git@"), ":", "/"))
 	case false:
+		if strings.Contains(repository, "http://") {
+			return fmt.Sprintf("%s/%s", v.dir, strings.TrimPrefix(strings.TrimSuffix(repository, ".git"), "http://"))
+		}
 		return fmt.Sprintf("%s/%s", v.dir, strings.TrimPrefix(strings.TrimSuffix(repository, ".git"), "https://"))
 	default:
-		return ""
+		return "unknown"
 	}
 
 }
